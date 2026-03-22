@@ -1,0 +1,14 @@
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer hexagon -->
+  <polygon points="24,2 43.1,13 43.1,35 24,46 4.9,35 4.9,13" fill="#1A6B5A"/>
+  <!-- Middle hexagon -->
+  <polygon points="24,8 37.9,16 37.9,32 24,40 10.1,32 10.1,16" fill="#22856F"/>
+  <!-- Inner hexagon -->
+  <polygon points="24,14 32.7,19 32.7,29 24,34 15.3,29 15.3,19" fill="#0F4A3A"/>
+  <!-- Cube top -->
+  <polygon points="24,18 30,21 24,24 18,21" fill="#3B82F6"/>
+  <!-- Cube left -->
+  <polygon points="18,21 24,24 24,30 18,27" fill="#1D4ED8"/>
+  <!-- Cube right -->
+  <polygon points="24,24 30,21 30,27 24,30" fill="#1E3A8A"/>
+</svg>
