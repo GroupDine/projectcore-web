@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Geist, Inter } from "next/font/google";
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist",
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,8 +27,8 @@ export const metadata: Metadata = {
     "automatización IA",
     "marketing digital",
     "software a medida",
-    "Next.js",
     "agencia full-service",
+    "pymes España",
   ],
   authors: [{ name: "ProjectCore" }],
   creator: "ProjectCore",
@@ -70,8 +76,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} scroll-smooth`}>
-      <body className="min-h-full antialiased">{children}</body>
+    <html lang="es" className={`${geist.variable} ${inter.variable} scroll-smooth`}>
+      <body className="min-h-full antialiased font-[var(--font-inter)]">{children}</body>
     </html>
   );
 }

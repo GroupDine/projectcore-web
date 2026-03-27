@@ -8,21 +8,22 @@ interface DiagnosticModalProps {
   onClose: () => void;
 }
 
-const businessTypes = [
+const BUSINESS_TYPES = [
   "Despacho / Asesoría",
-  "Restaurante",
-  "Clínica",
-  "Comercio",
-  "Autónomo",
+  "Clínica o salud",
+  "Restaurante u hostelería",
+  "Comercio local",
+  "Autónomo / Freelance",
   "Otro",
 ];
 
-const serviceTypes = [
-  "Web",
-  "Automatización",
-  "Marketing",
-  "Software",
-  "No sé, necesito consejo",
+const SERVICE_TYPES = [
+  "Web profesional",
+  "Web + automatización",
+  "Automatizaciones IA",
+  "Software a medida",
+  "Marketing digital",
+  "No sé — necesito orientación",
 ];
 
 const initialForm = {
@@ -39,13 +40,11 @@ export default function DiagnosticModal({ isOpen, onClose }: DiagnosticModalProp
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Bloquear scroll del body
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  // Cerrar con Escape
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); },
     [onClose]
@@ -64,7 +63,6 @@ export default function DiagnosticModal({ isOpen, onClose }: DiagnosticModalProp
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulación de envío
     await new Promise((r) => setTimeout(r, 1000));
     setLoading(false);
     setSubmitted(true);
@@ -75,12 +73,20 @@ export default function DiagnosticModal({ isOpen, onClose }: DiagnosticModalProp
     setTimeout(() => {
       setSubmitted(false);
       setForm(initialForm);
-    }, 300);
+    }, 350);
   };
 
-  const inputClass =
-    "w-full px-4 py-3 rounded-[8px] text-sm text-white border outline-none transition-colors duration-200 focus:border-[#1A6B5A]";
-  const inputStyle = { backgroundColor: "#0D1421", borderColor: "#1F2937" };
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "12px 16px",
+    borderRadius: "0.875rem",
+    fontSize: "14px",
+    color: "#fff",
+    background: "rgba(255,255,255,0.03)",
+    border: "1px solid rgba(255,255,255,0.08)",
+    outline: "none",
+    transition: "border-color 0.3s",
+  };
 
   return (
     <AnimatePresence>
@@ -89,193 +95,153 @@ export default function DiagnosticModal({ isOpen, onClose }: DiagnosticModalProp
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center px-4"
-          style={{ backgroundColor: "rgba(0,0,0,0.7)", backdropFilter: "blur(4px)" }}
+          transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+          className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6"
+          style={{
+            background: "rgba(6,11,20,0.85)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+          }}
           onClick={handleClose}
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 16 }}
+            initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 16 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="relative w-full max-w-lg rounded-[12px] border overflow-y-auto max-h-[90vh]"
-            style={{ backgroundColor: "#111827", borderColor: "#1F2937" }}
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+            className="relative w-full max-w-lg overflow-y-auto max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Cerrar */}
-            <button
-              onClick={handleClose}
-              className="absolute top-4 right-4 p-2 rounded-lg transition-colors duration-200 cursor-pointer"
-              style={{ color: "#6B7280" }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#FFFFFF")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#6B7280")}
-              aria-label="Cerrar"
+            {/* Double-Bezel container */}
+            <div
+              className="p-px rounded-[2rem]"
+              style={{
+                background: "rgba(255,255,255,0.06)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
+              }}
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-
-            <div className="p-8">
-              {submitted ? (
-                /* Estado de éxito */
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="text-center py-8"
+              <div
+                className="rounded-[calc(2rem-1px)] p-8"
+                style={{
+                  background: "#0D1421",
+                  boxShadow: "inset 0 1px 1px rgba(255,255,255,0.06)",
+                }}
+              >
+                {/* Close button */}
+                <button
+                  onClick={handleClose}
+                  className="absolute top-6 right-6 w-8 h-8 rounded-full flex items-center justify-center text-white/35 hover:text-white/70 transition-all duration-300 cursor-pointer"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                  aria-label="Cerrar"
                 >
-                  <div
-                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-                    style={{ backgroundColor: "rgba(26,107,90,0.2)" }}
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+
+                {submitted ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.92 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, ease: [0.32, 0.72, 0, 1] }}
+                    className="text-center py-8 flex flex-col items-center gap-4"
                   >
-                    <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" style={{ color: "#1A6B5A" }}>
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-3">¡Recibido!</h3>
-                  <p className="text-sm" style={{ color: "#9CA3AF" }}>
-                    Te contactamos en menos de 24 horas. ¡Gracias por confiar en ProjectCore!
-                  </p>
-                  <button
-                    onClick={handleClose}
-                    className="mt-8 px-6 py-2.5 rounded-[8px] text-sm font-semibold text-white cursor-pointer transition-colors"
-                    style={{ backgroundColor: "#1A6B5A" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#22856F")}
-                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1A6B5A")}
-                  >
-                    Cerrar
-                  </button>
-                </motion.div>
-              ) : (
-                /* Formulario */
-                <>
-                  <h2 className="text-2xl font-bold text-white mb-2">
-                    Cuéntanos sobre tu negocio
-                  </h2>
-                  <p className="text-sm mb-8" style={{ color: "#9CA3AF" }}>
-                    Te respondemos en menos de 24 horas
-                  </p>
-
-                  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                    {/* Nombre */}
-                    <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#9CA3AF" }}>
-                        Nombre completo *
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        required
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Tu nombre"
-                        className={inputClass}
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Email */}
-                    <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#9CA3AF" }}>
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        required
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="tu@email.com"
-                        className={inputClass}
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Teléfono */}
-                    <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#9CA3AF" }}>
-                        Teléfono / WhatsApp (opcional)
-                      </label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={form.phone}
-                        onChange={handleChange}
-                        placeholder="+34 600 000 000"
-                        className={inputClass}
-                        style={inputStyle}
-                      />
-                    </div>
-
-                    {/* Tipo de negocio */}
-                    <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#9CA3AF" }}>
-                        Tipo de negocio
-                      </label>
-                      <select
-                        name="businessType"
-                        value={form.businessType}
-                        onChange={handleChange}
-                        className={inputClass}
-                        style={{ ...inputStyle, cursor: "pointer" }}
-                      >
-                        <option value="">Selecciona una opción</option>
-                        {businessTypes.map((t) => (
-                          <option key={t} value={t}>{t}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Qué necesitas */}
-                    <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#9CA3AF" }}>
-                        ¿Qué necesitas?
-                      </label>
-                      <select
-                        name="serviceType"
-                        value={form.serviceType}
-                        onChange={handleChange}
-                        className={inputClass}
-                        style={{ ...inputStyle, cursor: "pointer" }}
-                      >
-                        <option value="">Selecciona una opción</option>
-                        {serviceTypes.map((t) => (
-                          <option key={t} value={t}>{t}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Mensaje */}
-                    <div>
-                      <label className="block text-xs font-medium mb-1.5" style={{ color: "#9CA3AF" }}>
-                        Mensaje (opcional)
-                      </label>
-                      <textarea
-                        name="message"
-                        value={form.message}
-                        onChange={handleChange}
-                        placeholder="Cuéntanos más sobre tu proyecto..."
-                        rows={3}
-                        className={inputClass}
-                        style={{ ...inputStyle, resize: "none" }}
-                      />
-                    </div>
-
-                    {/* Submit */}
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="mt-2 w-full py-3 rounded-[8px] text-sm font-bold text-white transition-all duration-200 cursor-pointer disabled:opacity-60"
-                      style={{ backgroundColor: "#1A6B5A" }}
-                      onMouseEnter={(e) => { if (!loading) e.currentTarget.style.backgroundColor = "#22856F"; }}
-                      onMouseLeave={(e) => { if (!loading) e.currentTarget.style.backgroundColor = "#1A6B5A"; }}
+                    <div
+                      className="w-16 h-16 rounded-full flex items-center justify-center"
+                      style={{ background: "rgba(26,107,90,0.15)", border: "1px solid rgba(26,107,90,0.35)" }}
                     >
-                      {loading ? "Enviando..." : "Enviar →"}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="#1A6B5A" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    </div>
+                    <h3 className="font-[var(--font-geist)] text-2xl font-bold text-white">¡Recibido!</h3>
+                    <p className="text-[15px] text-white/45 max-w-xs">
+                      Te contactamos en menos de 24 horas para coordinar tu diagnóstico gratuito.
+                    </p>
+                    <button
+                      onClick={handleClose}
+                      className="mt-4 rounded-full bg-[#1A6B5A] px-7 py-3 text-[14px] font-semibold text-white transition-all duration-400 hover:bg-[#22856F] cursor-pointer"
+                    >
+                      Cerrar
                     </button>
-                  </form>
-                </>
-              )}
+                  </motion.div>
+                ) : (
+                  <>
+                    <h2 className="font-[var(--font-geist)] text-2xl font-bold text-white mb-1.5">
+                      Cuéntanos sobre tu negocio
+                    </h2>
+                    <p className="text-[14px] text-white/35 mb-7">
+                      Respuesta garantizada en menos de 24 horas
+                    </p>
+
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[11px] uppercase tracking-[0.12em] font-medium text-white/30">Nombre *</label>
+                          <input type="text" name="name" required value={form.name} onChange={handleChange} placeholder="Tu nombre" style={inputStyle} />
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                          <label className="text-[11px] uppercase tracking-[0.12em] font-medium text-white/30">Email *</label>
+                          <input type="email" name="email" required value={form.email} onChange={handleChange} placeholder="tu@email.com" style={inputStyle} />
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] uppercase tracking-[0.12em] font-medium text-white/30">Teléfono / WhatsApp (opcional)</label>
+                        <input type="tel" name="phone" value={form.phone} onChange={handleChange} placeholder="+34 600 000 000" style={inputStyle} />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] uppercase tracking-[0.12em] font-medium text-white/30">Tipo de negocio</label>
+                        <select name="businessType" value={form.businessType} onChange={handleChange} style={{ ...inputStyle, cursor: "pointer" }}>
+                          <option value="" style={{ background: "#0D1421" }}>Selecciona tu sector</option>
+                          {BUSINESS_TYPES.map((t) => (
+                            <option key={t} value={t} style={{ background: "#0D1421" }}>{t}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] uppercase tracking-[0.12em] font-medium text-white/30">¿Qué necesitas?</label>
+                        <select name="serviceType" value={form.serviceType} onChange={handleChange} style={{ ...inputStyle, cursor: "pointer" }}>
+                          <option value="" style={{ background: "#0D1421" }}>Selecciona un servicio</option>
+                          {SERVICE_TYPES.map((t) => (
+                            <option key={t} value={t} style={{ background: "#0D1421" }}>{t}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[11px] uppercase tracking-[0.12em] font-medium text-white/30">Mensaje (opcional)</label>
+                        <textarea name="message" value={form.message} onChange={handleChange} placeholder="Cuéntame más sobre tu proyecto..." rows={3} style={{ ...inputStyle, resize: "none" }} />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={loading}
+                        className="group mt-2 flex items-center justify-center gap-3 w-full rounded-full bg-[#1A6B5A] py-3.5 text-[14px] font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#22856F] hover:scale-[1.02] active:scale-[0.97] disabled:opacity-60 cursor-pointer"
+                        style={{ boxShadow: "0 0 0 1px rgba(26,107,90,0.3), 0 4px 20px rgba(26,107,90,0.2)" }}
+                      >
+                        {loading ? (
+                          <span className="flex items-center gap-2">
+                            <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z" />
+                            </svg>
+                            Enviando...
+                          </span>
+                        ) : (
+                          <>
+                            <span>Solicitar diagnóstico gratuito</span>
+                            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/20 text-sm transition-all duration-400 group-hover:translate-x-0.5 group-hover:scale-110">→</span>
+                          </>
+                        )}
+                      </button>
+                    </form>
+                  </>
+                )}
+              </div>
             </div>
           </motion.div>
         </motion.div>

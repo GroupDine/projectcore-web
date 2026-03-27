@@ -6,124 +6,141 @@ interface HowItWorksProps {
   onOpenModal: () => void;
 }
 
-const steps = [
+const STEPS = [
   {
     number: "01",
     title: "Diagnóstico gratuito",
     description:
-      "Analizamos tu situación actual y te decimos exactamente qué tiene más sentido para tu negocio. Sin compromiso.",
-    duration: "Duración: 30 minutos",
+      "30 minutos para entender tu negocio, tus objetivos y qué es lo que más impacto tendría ahora mismo. Sin compromisos, sin letra pequeña.",
   },
   {
     number: "02",
-    title: "Propuesta clara",
+    title: "Propuesta en 48h",
     description:
-      "Recibes una propuesta con alcance definido, precio fijo y plazos concretos. Sin letra pequeña.",
-    duration: "Duración: 24-48h",
+      "Precio fijo. Plazo claro. Sin sorpresas. Recibes una propuesta detallada con exactamente lo que vas a obtener y cuándo.",
   },
   {
     number: "03",
-    title: "Entregamos resultados",
+    title: "Entrega y funcionando",
     description:
-      "Construimos, lanzamos y te mostramos el impacto con métricas reales. Tú decides si continuar.",
-    duration: "Duración: según servicio",
+      "Cobro 100% por adelantado y entrega en el plazo acordado. Cuando termina, tienes algo que funciona — no una promesa.",
   },
 ];
 
 export default function HowItWorks({ onOpenModal }: HowItWorksProps) {
   return (
-    <section id="como-funciona" className="py-24" style={{ backgroundColor: "#0A0F1C" }}>
-      <div className="max-w-6xl mx-auto px-6 lg:px-8">
-        {/* Encabezado */}
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-4"
-          >
-            Simple, claro y sin sorpresas
-          </motion.h2>
-        </div>
+    <section
+      id="como-funciona"
+      className="py-28 md:py-36 px-6"
+      style={{ backgroundColor: "#070C18" }}
+    >
+      <div className="max-w-5xl mx-auto">
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.65, ease: [0.32, 0.72, 0, 1] }}
+          className="text-center mb-5"
+        >
+          <span className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.18em] font-medium text-white/40" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+            El proceso
+          </span>
+        </motion.div>
 
-        {/* Pasos */}
-        <div className="flex flex-col lg:flex-row items-stretch gap-4 lg:gap-0 mb-12">
-          {steps.map((step, i) => (
-            <div key={i} className="flex items-stretch flex-1">
-              {/* Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="flex-1 rounded-[12px] p-8 border"
-                style={{ backgroundColor: "#111827", borderColor: "#1F2937" }}
+        <motion.h2
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.75, delay: 0.05, ease: [0.32, 0.72, 0, 1] }}
+          className="font-[var(--font-geist)] text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center leading-tight tracking-tight mb-20"
+        >
+          Sencillo. Rápido. Sin sorpresas.
+        </motion.h2>
+
+        {/* Steps */}
+        <div className="flex flex-col gap-6">
+          {STEPS.map((step, i) => (
+            <motion.div
+              key={step.number}
+              initial={{ opacity: 0, x: -24, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.75,
+                delay: 0.12 * i,
+                ease: [0.32, 0.72, 0, 1],
+              }}
+            >
+              {/* Double-Bezel */}
+              <div
+                className="p-px rounded-[1.75rem]"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
               >
-                {/* Número */}
                 <div
-                  className="text-4xl font-bold mb-4 leading-none"
-                  style={{ color: "#1A6B5A" }}
+                  className="rounded-[calc(1.75rem-1px)] px-8 py-8 flex items-start gap-8"
+                  style={{
+                    background: "rgba(255,255,255,0.015)",
+                    boxShadow: "inset 0 1px 1px rgba(255,255,255,0.04)",
+                  }}
                 >
-                  {step.number}
-                </div>
-                <h3 className="text-lg font-bold text-white mb-3">{step.title}</h3>
-                <p className="text-sm leading-relaxed mb-4" style={{ color: "#9CA3AF" }}>
-                  {step.description}
-                </p>
-                <span
-                  className="inline-block text-xs px-3 py-1 rounded-full border font-medium"
-                  style={{ color: "#9CA3AF", borderColor: "#1F2937" }}
-                >
-                  {step.duration}
-                </span>
-              </motion.div>
-
-              {/* Flecha entre pasos (desktop) */}
-              {i < steps.length - 1 && (
-                <div className="hidden lg:flex items-center px-4 shrink-0">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    style={{ color: "#374151" }}
+                  {/* Big number */}
+                  <motion.span
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.6,
+                      delay: 0.12 * i + 0.15,
+                      ease: [0.32, 0.72, 0, 1],
+                    }}
+                    className="font-[var(--font-geist)] text-5xl md:text-6xl font-bold leading-none flex-shrink-0 select-none"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(26,107,90,0.6) 0%, rgba(26,107,90,0.15) 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      backgroundClip: "text",
+                    }}
                   >
-                    <path
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                    {step.number}
+                  </motion.span>
+
+                  <div className="flex flex-col gap-2 pt-1">
+                    <h3 className="font-[var(--font-geist)] text-xl font-semibold text-white">
+                      {step.title}
+                    </h3>
+                    <p className="text-[15px] text-white/45 leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-              )}
-            </div>
+              </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* CTA */}
-        <div className="flex justify-center">
-          <motion.button
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: 0.3 }}
+        {/* CTA under steps */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, delay: 0.4, ease: [0.32, 0.72, 0, 1] }}
+          className="text-center mt-14"
+        >
+          <button
             onClick={onOpenModal}
-            className="px-8 py-4 rounded-[8px] text-base font-semibold text-white transition-all duration-300 cursor-pointer"
-            style={{ backgroundColor: "#1A6B5A" }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = "#22856F";
-              e.currentTarget.style.boxShadow = "0 0 28px rgba(26,107,90,0.4)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = "#1A6B5A";
-              e.currentTarget.style.boxShadow = "none";
-            }}
+            className="group inline-flex items-center gap-3 rounded-full bg-[#1A6B5A] px-7 py-3.5 text-[15px] font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#22856F] hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+            style={{ boxShadow: "0 0 0 1px rgba(26,107,90,0.3), 0 4px 20px rgba(26,107,90,0.2)" }}
           >
-            Empezar diagnóstico gratuito →
-          </motion.button>
-        </div>
+            <span>Empezar ahora — gratis</span>
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black/20 text-sm transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-px group-hover:scale-110">
+              →
+            </span>
+          </button>
+        </motion.div>
       </div>
     </section>
   );

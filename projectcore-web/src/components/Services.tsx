@@ -1,228 +1,228 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Globe, Zap, Workflow, Code2, TrendingUp } from "lucide-react";
 
 interface ServicesProps {
   onOpenModal: () => void;
 }
 
-const services = [
+const SERVICES = [
   {
-    Icon: Globe,
-    name: "Web Profesional",
-    description: "Tu presencia online lista en 5-7 días, diseñada para convertir visitantes en clientes.",
-    includes: [
-      "Diseño moderno y responsive",
-      "SEO básico incluido",
-      "Dominio y hosting configurado",
+    tag: "01",
+    name: "Web profesional",
+    price: "desde 800€",
+    delivery: "Lista en 5–7 días",
+    color: "#1A6B5A",
+    features: [
+      "Diseño a medida, sin plantillas",
+      "Mobile-first y optimizada para Google",
+      "Formulario de contacto y analíticas",
     ],
-    price: "Desde 797€",
-    monthly: "Desde 79€/mes mantenimiento",
-    popular: false,
   },
   {
-    Icon: Zap,
-    name: "Web + Automatización",
-    description: "Web completa con un sistema automático de captación de leads activo 24/7.",
-    includes: [
-      "Todo lo de Web Profesional",
-      "Agente de captación automática de leads",
-      "CRM básico configurado",
+    tag: "02",
+    name: "Web + automatización",
+    price: "desde 1.800€",
+    monthly: "+ 200€/mes",
+    delivery: "Lista en 7–10 días",
+    color: "#6C63FF",
+    badge: "Más popular",
+    features: [
+      "Todo lo de Web profesional",
+      "Automatización de leads y respuestas",
+      "Integración con CRM o email marketing",
     ],
-    price: "Desde 1.597€",
-    monthly: "Desde 197€/mes mantenimiento",
-    popular: true,
   },
   {
-    Icon: Workflow,
+    tag: "03",
     name: "Automatizaciones IA",
-    description: "Flujos inteligentes que eliminan tareas repetitivas y trabajan mientras tú descansas.",
-    includes: [
-      "Diagnóstico de procesos automatizables",
-      "Sistemas inteligentes a medida para tu negocio",
-      "Mantenimiento, soporte y mejora continua",
+    price: "desde 600€",
+    monthly: "+ 150€/mes",
+    delivery: "En 3–5 días",
+    color: "#1A6B5A",
+    features: [
+      "Flujos automáticos con IA (n8n + Claude)",
+      "Respuestas, notificaciones y reportes solos",
+      "Sin código, sin mantenimiento tuyo",
     ],
-    price: "Desde 799€",
-    monthly: "Desde 147€/mes",
-    popular: false,
   },
   {
-    Icon: Code2,
-    name: "Software a Medida",
-    description: "Herramientas, apps o plataformas construidas exactamente para cómo funciona tu negocio.",
-    includes: [
-      "Análisis y prototipo previo",
-      "Desarrollo con stack moderno",
-      "Entrega iterativa por fases",
+    tag: "04",
+    name: "Software a medida",
+    price: "desde 2.500€",
+    delivery: "Según alcance",
+    color: "#6C63FF",
+    features: [
+      "Aplicación web o interna a tu medida",
+      "Base de datos, autenticación y panel admin",
+      "Escala contigo — sin límites de plataforma",
     ],
-    price: "Desde 2.497€",
-    monthly: null,
-    popular: false,
   },
   {
-    Icon: TrendingUp,
-    name: "Marketing Digital",
-    description: "Visibilidad, contenido y campañas que atraen clientes reales de forma constante.",
-    includes: [
-      "SEO + contenido optimizado",
-      "Gestión de redes y campañas",
-      "Reporting mensual de resultados",
+    tag: "05",
+    name: "Marketing digital",
+    price: "desde 400€/mes",
+    delivery: "Inicio en 48h",
+    color: "#1A6B5A",
+    features: [
+      "Contenido para redes sociales + SEO",
+      "Campañas de ads (Google / Meta)",
+      "Reportes mensuales de resultados reales",
     ],
-    price: "Desde 397€/mes",
-    monthly: null,
-    popular: false,
   },
 ];
 
-function ServiceCard({
-  s,
-  onOpenModal,
-}: {
-  s: (typeof services)[0];
-  onOpenModal: () => void;
-}) {
-  const { Icon } = s;
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
-      className="relative flex flex-col rounded-[12px] p-6 transition-all duration-200 cursor-default"
-      style={{
-        backgroundColor: "#111827",
-        border: s.popular ? "1px solid #1A6B5A" : "1px solid #1F2937",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
-        (e.currentTarget as HTMLElement).style.boxShadow =
-          "0 8px 32px rgba(26,107,90,0.15)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-        (e.currentTarget as HTMLElement).style.boxShadow = "none";
-      }}
-    >
-      {/* Badge popular */}
-      {s.popular && (
-        <div
-          className="absolute -top-3 left-6 px-3 py-1 rounded-full text-xs font-semibold text-white"
-          style={{ backgroundColor: "#6C63FF" }}
-        >
-          MÁS POPULAR
-        </div>
-      )}
-
-      {/* Icono circular */}
-      <div
-        className="w-16 h-16 rounded-full flex items-center justify-center mb-5"
-        style={{ backgroundColor: "#1A2E27" }}
-      >
-        <Icon size={28} color="#1A6B5A" strokeWidth={1.75} />
-      </div>
-
-      {/* Nombre */}
-      <h3 className="text-lg font-bold text-white mb-2">{s.name}</h3>
-
-      {/* Descripción */}
-      <p className="text-sm mb-4 leading-relaxed" style={{ color: "#9CA3AF" }}>
-        {s.description}
-      </p>
-
-      {/* Bullets */}
-      <ul className="flex flex-col gap-2 mb-5 flex-1">
-        {s.includes.map((item, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm text-white">
-            <span className="mt-0.5 shrink-0" style={{ color: "#1A6B5A" }}>
-              ✓
-            </span>
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
-
-      {/* Separador */}
-      <div className="border-t my-4" style={{ borderColor: "#1F2937" }} />
-
-      {/* Precio */}
-      <div className="mb-5">
-        <span className="text-xs mb-1 block" style={{ color: "#6B7280" }}>
-          Precio
-        </span>
-        <span className="text-xl font-bold text-white">{s.price}</span>
-        {s.monthly && (
-          <span className="block text-xs mt-1" style={{ color: "#6B7280" }}>
-            + {s.monthly}
-          </span>
-        )}
-      </div>
-
-      {/* Botón */}
-      <button
-        onClick={onOpenModal}
-        className="w-full px-4 py-2.5 rounded-[8px] text-sm font-semibold border transition-all duration-200 cursor-pointer"
-        style={{
-          borderColor: "#1A6B5A",
-          color: "#1A6B5A",
-          backgroundColor: "transparent",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = "#1A6B5A";
-          e.currentTarget.style.color = "#FFFFFF";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = "transparent";
-          e.currentTarget.style.color = "#1A6B5A";
-        }}
-      >
-        Empezar →
-      </button>
-    </motion.div>
-  );
-}
-
 export default function Services({ onOpenModal }: ServicesProps) {
-  const topThree = services.slice(0, 3);
-  const bottomTwo = services.slice(3);
-
   return (
-    <section id="servicios" className="py-24" style={{ backgroundColor: "#0A0F1C" }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        {/* Encabezado */}
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-4"
-          >
-            ¿Qué necesita tu negocio?
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            style={{ color: "#9CA3AF" }}
-          >
-            Elige uno o combínalos. Sin paquetes obligatorios.
-          </motion.p>
-        </div>
+    <section id="servicios" className="py-28 md:py-36 px-6" style={{ backgroundColor: "#0A0F1C" }}>
+      <div className="max-w-6xl mx-auto">
+        {/* Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.65, ease: [0.32, 0.72, 0, 1] }}
+          className="text-center mb-5"
+        >
+          <span className="rounded-full px-3 py-1 text-[11px] uppercase tracking-[0.18em] font-medium text-white/40" style={{ border: "1px solid rgba(255,255,255,0.07)" }}>
+            Servicios
+          </span>
+        </motion.div>
 
-        {/* Grid 3 arriba */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-          {topThree.map((s) => (
-            <ServiceCard key={s.name} s={s} onOpenModal={onOpenModal} />
-          ))}
-        </div>
+        <motion.h2
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.75, delay: 0.05, ease: [0.32, 0.72, 0, 1] }}
+          className="font-[var(--font-geist)] text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center leading-tight tracking-tight mb-4"
+        >
+          Elige lo que necesita tu negocio
+        </motion.h2>
 
-        {/* Grid 2 abajo centrados */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:max-w-4xl lg:mx-auto">
-          {bottomTwo.map((s) => (
-            <ServiceCard key={s.name} s={s} onOpenModal={onOpenModal} />
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, delay: 0.1, ease: [0.32, 0.72, 0, 1] }}
+          className="text-center text-white/40 text-[15px] mb-16"
+        >
+          Precios fijos. Plazos claros. Cobro 100% por adelantado.
+        </motion.p>
+
+        {/* Cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {SERVICES.map((service, i) => (
+            <motion.div
+              key={service.tag}
+              initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{
+                duration: 0.75,
+                delay: 0.07 * i,
+                ease: [0.32, 0.72, 0, 1],
+              }}
+              className="group"
+            >
+              {/* Double-Bezel outer shell */}
+              <div
+                className="p-px rounded-[1.75rem] h-full transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                }}
+              >
+                {/* Inner core */}
+                <div
+                  className="rounded-[calc(1.75rem-1px)] p-7 h-full flex flex-col gap-5 transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]"
+                  style={{
+                    background: "rgba(255,255,255,0.015)",
+                    boxShadow: "inset 0 1px 1px rgba(255,255,255,0.04)",
+                  }}
+                >
+                  {/* Header row */}
+                  <div className="flex items-start justify-between">
+                    <span
+                      className="text-[11px] font-mono font-medium"
+                      style={{ color: service.color }}
+                    >
+                      {service.tag}
+                    </span>
+                    {service.badge && (
+                      <span
+                        className="rounded-full px-2.5 py-0.5 text-[10px] font-medium"
+                        style={{
+                          background: `${service.color}22`,
+                          color: service.color,
+                          border: `1px solid ${service.color}40`,
+                        }}
+                      >
+                        {service.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  <div>
+                    <h3 className="font-[var(--font-geist)] text-lg font-semibold text-white mb-2 leading-snug">
+                      {service.name}
+                    </h3>
+                    <div className="flex items-baseline gap-2 flex-wrap">
+                      <span className="text-2xl font-bold text-white font-[var(--font-geist)]">
+                        {service.price}
+                      </span>
+                      {service.monthly && (
+                        <span className="text-sm text-white/35">{service.monthly}</span>
+                      )}
+                    </div>
+                    <p
+                      className="text-[12px] mt-1"
+                      style={{ color: service.color, opacity: 0.8 }}
+                    >
+                      {service.delivery}
+                    </p>
+                  </div>
+
+                  {/* Features */}
+                  <ul className="flex flex-col gap-2.5 flex-1">
+                    {service.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-2.5 text-[14px] text-white/45">
+                        <span
+                          className="mt-[3px] w-1.5 h-1.5 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: service.color, opacity: 0.7 }}
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  <button
+                    onClick={onOpenModal}
+                    className="group/btn mt-auto flex items-center justify-between w-full rounded-full px-5 py-3 text-[13px] font-medium text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                    style={{
+                      background: `${service.color}18`,
+                      border: `1px solid ${service.color}35`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = `${service.color}30`;
+                      e.currentTarget.style.borderColor = `${service.color}60`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = `${service.color}18`;
+                      e.currentTarget.style.borderColor = `${service.color}35`;
+                    }}
+                  >
+                    <span>Solicitar este servicio</span>
+                    <span
+                      className="w-6 h-6 rounded-full flex items-center justify-center text-[11px] transition-transform duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover/btn:translate-x-0.5"
+                      style={{ background: `${service.color}25` }}
+                    >
+                      →
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

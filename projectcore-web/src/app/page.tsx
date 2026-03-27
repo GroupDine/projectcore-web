@@ -4,12 +4,11 @@ import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import SocialProof from "@/components/SocialProof";
+import Problem from "@/components/Problem";
 import Services from "@/components/Services";
-import VideoDemo from "@/components/VideoDemo";
 import HowItWorks from "@/components/HowItWorks";
-import Metrics from "@/components/Metrics";
-import Pricing from "@/components/Pricing";
-import FAQ from "@/components/FAQ";
+import ForWhom from "@/components/ForWhom";
+import LeadMagnet from "@/components/LeadMagnet";
 import CTAFinal from "@/components/CTAFinal";
 import Footer from "@/components/Footer";
 import DiagnosticModal from "@/components/DiagnosticModal";
@@ -25,12 +24,11 @@ export default function Home() {
       <Navbar onOpenModal={openModal} />
       <Hero onOpenModal={openModal} />
       <SocialProof />
+      <Problem />
       <Services onOpenModal={openModal} />
-      <VideoDemo />
       <HowItWorks onOpenModal={openModal} />
-      <Metrics />
-      <Pricing onOpenModal={openModal} />
-      <FAQ />
+      <ForWhom />
+      <LeadMagnet />
       <CTAFinal onOpenModal={openModal} />
       <Footer />
       <DiagnosticModal isOpen={modalOpen} onClose={closeModal} />

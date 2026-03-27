@@ -1,17 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LogoFull, LogoIcon } from "@/components/Logo";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
   onOpenModal: () => void;
 }
 
-const navLinks = [
+const NAV_LINKS = [
   { label: "Servicios", href: "#servicios" },
-  { label: "Precios", href: "#precios" },
   { label: "Cómo funciona", href: "#como-funciona" },
-  { label: "Contacto", href: "#faq" },
+  { label: "Para quién", href: "#para-quien" },
 ];
 
 export default function Navbar({ onOpenModal }: NavbarProps) {
@@ -19,12 +18,11 @@ export default function Navbar({ onOpenModal }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Bloquear scroll del body cuando el menú está abierto
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -38,104 +36,137 @@ export default function Navbar({ onOpenModal }: NavbarProps) {
 
   return (
     <>
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-[#0A0F1C]/90 backdrop-blur-md border-b border-[#1F2937]"
-            : "bg-transparent"
-        }`}
+      {/* Floating Island Nav */}
+      <motion.nav
+        className="fixed top-5 left-0 right-0 z-40 flex justify-center px-4"
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.32, 0.72, 0, 1] }}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
-            {/* Logo */}
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-              className="flex items-center bg-transparent border-none cursor-pointer p-0"
-              aria-label="Ir al inicio"
-            >
-              {/* Desktop: logo completo */}
-              <span className="hidden sm:block">
-                <LogoFull height={34} />
-              </span>
-              {/* Móvil: solo icono */}
-              <span className="block sm:hidden">
-                <LogoIcon size={32} />
-              </span>
-            </button>
+        <div
+          className="flex items-center gap-4 md:gap-6 rounded-full px-5 py-2.5 transition-all duration-700"
+          style={{
+            background: scrolled ? "rgba(10,15,28,0.92)" : "rgba(10,15,28,0.55)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: "1px solid rgba(255,255,255,0.07)",
+            boxShadow: scrolled
+              ? "0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)"
+              : "inset 0 1px 0 rgba(255,255,255,0.04)",
+          }}
+        >
+          {/* Logo */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="font-[var(--font-geist)] text-sm font-bold text-white tracking-tight whitespace-nowrap cursor-pointer bg-transparent border-none"
+          >
+            ProjectCore
+          </button>
 
-            {/* Nav links — desktop */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="text-[#9CA3AF] hover:text-white text-sm font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none"
-                >
-                  {link.label}
-                </button>
-              ))}
-            </nav>
+          {/* Separator */}
+          <div className="hidden md:block w-px h-4 bg-white/10" />
 
-            {/* CTA desktop */}
-            <button
-              onClick={onOpenModal}
-              className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-[8px] text-sm font-semibold text-white transition-all duration-200 cursor-pointer"
-              style={{
-                backgroundColor: "#1A6B5A",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#22856F")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "#1A6B5A")}
-            >
-              Diagnóstico gratis →
-            </button>
-
-            {/* Hamburguesa móvil */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 rounded-lg text-[#9CA3AF] hover:text-white hover:bg-[#1F2937] transition-colors"
-              aria-label="Abrir menú"
-            >
-              {menuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Drawer móvil */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-40 md:hidden">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="absolute top-0 right-0 h-full w-72 bg-[#0D1421] border-l border-[#1F2937] flex flex-col pt-20 px-6 gap-4">
-            {navLinks.map((link) => (
+          {/* Links — desktop */}
+          <div className="hidden md:flex items-center gap-5">
+            {NAV_LINKS.map((link) => (
               <button
                 key={link.href}
                 onClick={() => handleNavClick(link.href)}
-                className="text-left text-white text-lg font-medium py-3 border-b border-[#1F2937] hover:text-[#1A6B5A] transition-colors cursor-pointer bg-transparent border-x-0"
+                className="text-[13px] text-white/55 hover:text-white/90 transition-colors duration-300 cursor-pointer bg-transparent border-none whitespace-nowrap"
               >
                 {link.label}
               </button>
             ))}
-            <button
-              onClick={() => { setMenuOpen(false); onOpenModal(); }}
-              className="mt-4 w-full px-5 py-3 rounded-[8px] text-sm font-semibold text-white transition-all duration-200"
-              style={{ backgroundColor: "#1A6B5A" }}
-            >
-              Diagnóstico gratis →
-            </button>
           </div>
+
+          {/* CTA — desktop */}
+          <button
+            onClick={onOpenModal}
+            className="hidden md:flex items-center gap-2 rounded-full bg-[#1A6B5A] px-4 py-2 text-[13px] font-medium text-white group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#22856F] hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
+          >
+            <span>Hablar con nosotros</span>
+            <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 text-[11px] transition-transform duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px">
+              →
+            </span>
+          </button>
+
+          {/* Hamburger — mobile */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="md:hidden flex flex-col gap-[5px] justify-center items-center w-7 h-7 cursor-pointer bg-transparent border-none"
+            aria-label="Menú"
+          >
+            <span
+              className="block h-px bg-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              style={{
+                width: menuOpen ? "20px" : "20px",
+                transform: menuOpen ? "translateY(6px) rotate(45deg)" : "none",
+              }}
+            />
+            <span
+              className="block h-px bg-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              style={{
+                width: menuOpen ? "20px" : "14px",
+                opacity: menuOpen ? 0 : 1,
+              }}
+            />
+            <span
+              className="block h-px bg-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)]"
+              style={{
+                width: "20px",
+                transform: menuOpen ? "translateY(-6px) rotate(-45deg)" : "none",
+              }}
+            />
+          </button>
         </div>
-      )}
+      </motion.nav>
+
+      {/* Mobile full-screen menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="fixed inset-0 z-30 flex flex-col items-center justify-center md:hidden"
+            style={{
+              background: "rgba(10,15,28,0.97)",
+              backdropFilter: "blur(40px)",
+              WebkitBackdropFilter: "blur(40px)",
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.32, 0.72, 0, 1] }}
+          >
+            <div className="flex flex-col items-center gap-8">
+              {NAV_LINKS.map((link, i) => (
+                <motion.button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className="font-[var(--font-geist)] text-3xl font-semibold text-white cursor-pointer bg-transparent border-none"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.06 * i,
+                    ease: [0.32, 0.72, 0, 1],
+                  }}
+                >
+                  {link.label}
+                </motion.button>
+              ))}
+              <motion.button
+                onClick={() => { setMenuOpen(false); onOpenModal(); }}
+                className="mt-2 rounded-full bg-[#1A6B5A] px-8 py-4 text-base font-medium text-white cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2, ease: [0.32, 0.72, 0, 1] }}
+              >
+                Diagnóstico gratuito
+              </motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
