@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
-import Hero from "@/components/Hero";
+import ScrollHero from "@/components/ScrollHero";
 import SocialProof from "@/components/SocialProof";
 import Problem from "@/components/Problem";
 import Services from "@/components/Services";
@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <main style={{ backgroundColor: "#0A0F1C" }}>
       <Navbar onOpenModal={openModal} />
-      <Hero onOpenModal={openModal} />
+      <ScrollHero onOpenModal={openModal} />
       <SocialProof />
       <Problem />
       <Services onOpenModal={openModal} />
