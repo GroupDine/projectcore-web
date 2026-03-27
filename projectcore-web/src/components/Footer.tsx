@@ -60,9 +60,6 @@ export default function Footer() {
           <p className="text-[12px] text-white/20">
             © 2026 ProjectCore. Todos los derechos reservados.
           </p>
-          <p className="text-[12px] text-white/15">
-            Construido con Next.js · Vercel · Supabase
-          </p>
         </div>
       </div>
     </footer>

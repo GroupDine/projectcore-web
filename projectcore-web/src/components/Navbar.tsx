@@ -81,10 +81,13 @@ export default function Navbar({ onOpenModal }: NavbarProps) {
 
           {/* CTA — desktop */}
           <button
-            onClick={onOpenModal}
+            onClick={() => {
+              const el = document.querySelector("#contacto");
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }}
             className="hidden md:flex items-center gap-2 rounded-full bg-[#1A6B5A] px-4 py-2 text-[13px] font-medium text-white group transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#22856F] hover:scale-[1.03] active:scale-[0.97] cursor-pointer"
           >
-            <span>Hablar con nosotros</span>
+            <span>Diagnóstico gratuito</span>
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 text-[11px] transition-transform duration-400 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-0.5 group-hover:-translate-y-px">
               →
             </span>

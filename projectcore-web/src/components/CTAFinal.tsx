@@ -46,6 +46,7 @@ export default function CTAFinal({ onOpenModal }: CTAFinalProps) {
 
   return (
     <section
+      id="contacto"
       className="py-28 md:py-40 px-6 relative overflow-hidden"
       style={{ backgroundColor: "#070C18" }}
     >

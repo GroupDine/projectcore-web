@@ -10,6 +10,7 @@ const SECTORS = [
       </svg>
     ),
     label: "Despachos de abogados",
+    description: "Automatiza alertas de plazos, captación de clientes y emisión de facturas Verifactu.",
   },
   {
     icon: (
@@ -18,6 +19,7 @@ const SECTORS = [
       </svg>
     ),
     label: "Clínicas y salud",
+    description: "Agenda online, recordatorios automáticos y gestión de pacientes sin papel.",
   },
   {
     icon: (
@@ -26,6 +28,7 @@ const SECTORS = [
       </svg>
     ),
     label: "Restaurantes y hostelería",
+    description: "Reservas automáticas, carta digital y gestión de reseñas sin esfuerzo.",
   },
   {
     icon: (
@@ -34,6 +37,7 @@ const SECTORS = [
       </svg>
     ),
     label: "Comercios locales",
+    description: "Catálogo online, pedidos por WhatsApp y atención automática 24/7.",
   },
   {
     icon: (
@@ -42,6 +46,7 @@ const SECTORS = [
       </svg>
     ),
     label: "Gestorías y asesorías",
+    description: "Onboarding de clientes automatizado, documentación digital y seguimiento de expedientes.",
   },
   {
     icon: (
@@ -50,6 +55,7 @@ const SECTORS = [
       </svg>
     ),
     label: "Autónomos y freelances",
+    description: "Presupuestos automáticos, facturación y seguimiento de proyectos sin herramientas complicadas.",
   },
 ];
 
@@ -110,18 +116,23 @@ export default function ForWhom() {
                 }}
               >
                 <div
-                  className="rounded-[calc(1.5rem-1px)] px-6 py-5 flex items-center gap-4 transition-all duration-600 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:bg-[rgba(26,107,90,0.04)]"
+                  className="rounded-[calc(1.5rem-1px)] px-6 py-5 flex items-start gap-4 transition-all duration-600 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:bg-[rgba(26,107,90,0.04)]"
                   style={{
                     background: "rgba(255,255,255,0.01)",
                     boxShadow: "inset 0 1px 1px rgba(255,255,255,0.03)",
                   }}
                 >
-                  <span className="text-white/35 group-hover:text-[#1A6B5A] transition-colors duration-400 flex-shrink-0">
+                  <span className="text-white/35 group-hover:text-[#1A6B5A] transition-colors duration-400 flex-shrink-0 mt-0.5">
                     {sector.icon}
                   </span>
-                  <span className="text-[15px] font-medium text-white/60 group-hover:text-white/80 transition-colors duration-400">
-                    {sector.label}
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[15px] font-medium text-white/60 group-hover:text-white/80 transition-colors duration-400">
+                      {sector.label}
+                    </span>
+                    <span className="text-[13px] text-white/30 group-hover:text-white/45 transition-colors duration-400 leading-relaxed">
+                      {sector.description}
+                    </span>
+                  </div>
                 </div>
               </div>
             </motion.div>

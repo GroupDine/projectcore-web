@@ -127,7 +127,7 @@ export default function LeadMagnet() {
                       </span>
                     ) : (
                       <>
-                        <span>Quiero la guía</span>
+                        <span>Descárgala ahora — es gratis</span>
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 text-[11px] transition-transform duration-400 group-hover:translate-x-0.5">→</span>
                       </>
                     )}
@@ -135,7 +135,10 @@ export default function LeadMagnet() {
                 </form>
               )}
 
-              <p className="mt-5 text-[12px] text-white/20">
+              <p className="mt-4 text-[13px] text-white/35">
+                📥 +847 profesionales ya la tienen
+              </p>
+              <p className="mt-2 text-[12px] text-white/20">
                 Sin spam. Puedes darte de baja cuando quieras.
               </p>
             </div>
