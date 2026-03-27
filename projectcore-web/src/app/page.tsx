@@ -9,6 +9,7 @@ import Services from "@/components/Services";
 import HowItWorks from "@/components/HowItWorks";
 import ForWhom from "@/components/ForWhom";
 import LeadMagnet from "@/components/LeadMagnet";
+import ChatCore from "@/components/ChatCore";
 import CTAFinal from "@/components/CTAFinal";
 import Footer from "@/components/Footer";
 import DiagnosticModal from "@/components/DiagnosticModal";
@@ -29,6 +30,7 @@ export default function Home() {
       <HowItWorks onOpenModal={openModal} />
       <ForWhom />
       <LeadMagnet />
+      <ChatCore />
       <CTAFinal onOpenModal={openModal} />
       <Footer />
       <DiagnosticModal isOpen={modalOpen} onClose={closeModal} />

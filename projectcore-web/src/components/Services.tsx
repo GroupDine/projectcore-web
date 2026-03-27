@@ -10,39 +10,44 @@ const SERVICES = [
   {
     tag: "01",
     name: "Web profesional",
-    price: "desde 800€",
+    price: "desde 699€",
+    priceNote: "+ IVA",
     delivery: "Lista en 5–7 días",
     color: "#1A6B5A",
     features: [
-      "Diseño a medida, sin plantillas",
+      "Diseño a medida, sin plantillas genéricas",
       "Mobile-first y optimizada para Google",
-      "Formulario de contacto y analíticas",
+      "Dominio, hosting y analíticas incluidas",
+      "Formulario de contacto y mapa integrado",
     ],
   },
   {
     tag: "02",
     name: "Web + automatización",
-    price: "desde 1.800€",
-    monthly: "+ 200€/mes",
+    price: "desde 1.699€",
+    priceNote: "+ IVA",
     delivery: "Lista en 7–10 días",
     color: "#6C63FF",
     badge: "Más popular",
     features: [
       "Todo lo de Web profesional",
-      "Automatización de leads y respuestas",
+      "Chatbot de atención y captación de leads",
+      "Automatización de respuestas y seguimiento",
       "Integración con CRM o email marketing",
     ],
   },
   {
     tag: "03",
     name: "Automatizaciones IA",
-    price: "desde 600€",
-    monthly: "+ 150€/mes",
+    price: "desde 950€",
+    priceNote: "+ IVA",
+    monthly: "+ desde 150€/mes + IVA",
     delivery: "En 3–5 días",
     color: "#1A6B5A",
     features: [
       "Flujos automáticos con IA (n8n + Claude)",
       "Respuestas, notificaciones y reportes solos",
+      "Integración con WhatsApp, email o Telegram",
       "Sin código, sin mantenimiento tuyo",
     ],
   },
@@ -50,24 +55,28 @@ const SERVICES = [
     tag: "04",
     name: "Software a medida",
     price: "desde 2.500€",
+    priceNote: "+ IVA",
     delivery: "Según alcance",
     color: "#6C63FF",
     features: [
       "Aplicación web o interna a tu medida",
       "Base de datos, autenticación y panel admin",
       "Escala contigo — sin límites de plataforma",
+      "Soporte técnico incluido el primer mes",
     ],
   },
   {
     tag: "05",
-    name: "Marketing digital",
-    price: "desde 400€/mes",
+    name: "Publicidad online",
+    price: "desde 449€/mes",
+    priceNote: "+ IVA",
     delivery: "Inicio en 48h",
     color: "#1A6B5A",
     features: [
-      "Contenido para redes sociales + SEO",
-      "Campañas de ads (Google / Meta)",
-      "Reportes mensuales de resultados reales",
+      "Gestión de Google Ads y Meta Ads",
+      "Contenido para redes sociales + SEO local",
+      "Reportes mensuales con resultados reales",
+      "Sin permanencia mínima",
     ],
   },
 ];
@@ -166,14 +175,15 @@ export default function Services({ onOpenModal }: ServicesProps) {
                     <h3 className="font-[var(--font-geist)] text-lg font-semibold text-white mb-2 leading-snug">
                       {service.name}
                     </h3>
-                    <div className="flex items-baseline gap-2 flex-wrap">
+                    <div className="flex items-baseline gap-1.5 flex-wrap">
                       <span className="text-2xl font-bold text-white font-[var(--font-geist)]">
                         {service.price}
                       </span>
-                      {service.monthly && (
-                        <span className="text-sm text-white/35">{service.monthly}</span>
-                      )}
+                      <span className="text-sm text-white/35">{service.priceNote}</span>
                     </div>
+                    {service.monthly && (
+                      <p className="text-[12px] text-white/30 mt-0.5">{service.monthly}</p>
+                    )}
                     <p
                       className="text-[12px] mt-1"
                       style={{ color: service.color, opacity: 0.8 }}

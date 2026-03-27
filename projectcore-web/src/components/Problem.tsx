@@ -62,7 +62,7 @@ export default function Problem() {
           transition={{ duration: 0.75, delay: 0.05, ease: [0.32, 0.72, 0, 1] }}
           className="font-[var(--font-geist)] text-3xl md:text-4xl lg:text-5xl font-bold text-white text-center leading-tight tracking-tight mb-20"
         >
-          ¿Cuántos clientes pierdes cada mes
+          ¿Cuántos clientes pierdes cada mes{" "}
           <br className="hidden md:block" />
           por no aparecer online?
         </motion.h2>

@@ -2,45 +2,59 @@
 
 import { motion } from "framer-motion";
 
-const LOGOS = [
-  { name: "n8n", svg: (
-    <svg viewBox="0 0 60 24" fill="none" className="h-5 w-auto">
-      <text x="0" y="18" fontFamily="var(--font-geist), sans-serif" fontSize="18" fontWeight="700" fill="currentColor">n8n</text>
-    </svg>
-  )},
-  { name: "Claude AI", svg: (
-    <svg viewBox="0 0 100 24" fill="none" className="h-5 w-auto">
-      <text x="0" y="18" fontFamily="var(--font-geist), sans-serif" fontSize="15" fontWeight="600" fill="currentColor">Claude AI</text>
-    </svg>
-  )},
-  { name: "Supabase", svg: (
-    <svg viewBox="0 0 90 24" fill="none" className="h-5 w-auto">
-      <text x="0" y="18" fontFamily="var(--font-geist), sans-serif" fontSize="15" fontWeight="600" fill="currentColor">Supabase</text>
-    </svg>
-  )},
-  { name: "Vercel", svg: (
-    <svg viewBox="0 0 70 24" fill="none" className="h-5 w-auto">
-      <text x="0" y="18" fontFamily="var(--font-geist), sans-serif" fontSize="15" fontWeight="600" fill="currentColor">Vercel</text>
-    </svg>
-  )},
-  { name: "Next.js", svg: (
-    <svg viewBox="0 0 75 24" fill="none" className="h-5 w-auto">
-      <text x="0" y="18" fontFamily="var(--font-geist), sans-serif" fontSize="15" fontWeight="600" fill="currentColor">Next.js</text>
-    </svg>
-  )},
-  { name: "Stripe", svg: (
-    <svg viewBox="0 0 60 24" fill="none" className="h-5 w-auto">
-      <text x="0" y="18" fontFamily="var(--font-geist), sans-serif" fontSize="15" fontWeight="600" fill="currentColor">Stripe</text>
-    </svg>
-  )},
+const ROW_ONE = [
+  { name: "n8n" },
+  { name: "Make" },
+  { name: "Zapier" },
+  { name: "Claude AI" },
+  { name: "OpenAI" },
+  { name: "Supabase" },
 ];
 
-// Duplicate for seamless marquee
-const LOGOS_DOUBLED = [...LOGOS, ...LOGOS];
+const ROW_TWO = [
+  { name: "Vercel" },
+  { name: "Next.js" },
+  { name: "Stripe" },
+  { name: "Google Workspace" },
+  { name: "WhatsApp Business" },
+  { name: "Notion" },
+];
+
+function ToolBadge({ name }: { name: string }) {
+  return (
+    <div
+      className="flex-shrink-0 flex items-center justify-center px-5 py-2.5 rounded-full transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] cursor-default"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.07)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = "rgba(255,255,255,0.06)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.14)";
+        e.currentTarget.style.color = "rgba(255,255,255,1)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "rgba(255,255,255,0.03)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
+        e.currentTarget.style.color = "rgba(255,255,255,0.4)";
+      }}
+    >
+      <span
+        className="text-[13px] font-medium whitespace-nowrap transition-colors duration-500"
+        style={{ color: "rgba(255,255,255,0.4)" }}
+      >
+        {name}
+      </span>
+    </div>
+  );
+}
 
 export default function SocialProof() {
   return (
-    <section className="py-20 overflow-hidden" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+    <section
+      className="py-20 px-6"
+      style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}
+    >
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -53,29 +67,32 @@ export default function SocialProof() {
         </p>
       </motion.div>
 
-      {/* Marquee container with fade masks */}
-      <div className="relative">
-        <div
-          className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(to right, #0A0F1C, transparent)" }}
-        />
-        <div
-          className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-          style={{ background: "linear-gradient(to left, #0A0F1C, transparent)" }}
-        />
+      <div className="max-w-5xl mx-auto flex flex-col gap-4">
+        {/* Fila 1 — desktop: 6 items, mobile: scroll horizontal */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, delay: 0.05, ease: [0.32, 0.72, 0, 1] }}
+          className="flex gap-3 overflow-x-auto pb-1 scrollbar-none md:justify-center"
+        >
+          {ROW_ONE.map((tool) => (
+            <ToolBadge key={tool.name} name={tool.name} />
+          ))}
+        </motion.div>
 
-        <div className="overflow-hidden">
-          <div className="animate-marquee-left flex items-center gap-14">
-            {LOGOS_DOUBLED.map((logo, i) => (
-              <div
-                key={`${logo.name}-${i}`}
-                className="flex items-center text-white/30 hover:text-white/70 transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] whitespace-nowrap flex-shrink-0"
-              >
-                {logo.svg}
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Fila 2 — desktop: 6 items, mobile: scroll horizontal */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, delay: 0.12, ease: [0.32, 0.72, 0, 1] }}
+          className="flex gap-3 overflow-x-auto pb-1 scrollbar-none md:justify-center"
+        >
+          {ROW_TWO.map((tool) => (
+            <ToolBadge key={tool.name} name={tool.name} />
+          ))}
+        </motion.div>
       </div>
     </section>
   );
