@@ -14,7 +14,6 @@ PERSONALIDAD:
 - Siempre en español
 
 FLUJO DE CONVERSACIÓN:
-
 Mensaje 1 del visitante → Responde su pregunta directamente y haz UNA pregunta de diagnóstico.
 
 Preguntas de diagnóstico según contexto:
@@ -73,5 +72,6 @@ export async function POST(req: NextRequest) {
   });
 
   const content = response.choices[0].message.content ?? "";
-  return NextResponse.json({ content });
+
+  return NextResponse.json({ message: content });
 }
