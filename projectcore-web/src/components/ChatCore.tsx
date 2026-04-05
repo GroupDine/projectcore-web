@@ -8,6 +8,13 @@ interface Message {
   content: string;
 }
 
+interface ChatResponse {
+  message?: string;
+  action?: string;
+  metadata?: Record<string, unknown>;
+  error?: string;
+}
+
 const SUGGESTIONS = [
   "¿Cuánto cuesta una web profesional?",
   "¿En cuánto tiempo entregas?",
@@ -20,12 +27,29 @@ const INITIAL_MESSAGE: Message = {
   content: "Hola, soy Core — el asistente de ProjectCore. ¿En qué puedo ayudarte hoy?",
 };
 
+const SESSION_KEY = "projectcore_session_id";
+
+function getOrCreateSessionId(): string {
+  if (typeof window === "undefined") return `session_${Date.now()}`;
+  const stored = localStorage.getItem(SESSION_KEY);
+  if (stored) return stored;
+  const id = `session_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+  localStorage.setItem(SESSION_KEY, id);
+  return id;
+}
+
 export default function ChatCore() {
   const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Inicializar session_id desde localStorage solo en cliente
+  useEffect(() => {
+    setSessionId(getOrCreateSessionId());
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -36,37 +60,68 @@ export default function ChatCore() {
     if (!trimmed || loading) return;
 
     const userMsg: Message = { role: "user", content: trimmed };
-    const newMessages = [...messages, userMsg];
-    setMessages(newMessages);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput("");
     setLoading(true);
 
-    try {
-      // Solo enviamos los mensajes sin el inicial del sistema (que es el mensaje de bienvenida)
-      const apiMessages = newMessages
-        .filter((m) => !(m.role === "assistant" && m.content === INITIAL_MESSAGE.content))
-        .map((m) => ({ role: m.role, content: m.content }));
+    // Historial sin el mensaje de bienvenida inicial
+    const history = messages
+      .filter((m) => m.content !== INITIAL_MESSAGE.content)
+      .map((m) => ({ role: m.role, content: m.content }));
 
+    try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages }),
+        body: JSON.stringify({
+          message: trimmed,
+          session_id: sessionId,
+          history,
+        }),
       });
 
-      const data = await res.json();
+      const data: ChatResponse = await res.json().catch(() => ({ error: "Respuesta inválida" }));
 
-      if (data.error) {
+      if (data.error || !res.ok) {
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: "Lo siento, no puedo responder ahora mismo. Escríbenos a hola@projectcore.io o usa el formulario de contacto." },
+          {
+            role: "assistant",
+            content:
+              "Lo siento, no puedo responder ahora mismo. Escríbenos a hola@projectcore.io o usa el formulario de contacto.",
+          },
         ]);
-      } else {
-        setMessages((prev) => [...prev, { role: "assistant", content: data.content }]);
+        return;
       }
+
+      const replyText = data.message?.trim() || "";
+
+      // Manejar acción de agendamiento de reunión
+      if (data.action === "schedule_meeting" || data.action === "agenda_reunion") {
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: replyText || "Perfecto, te redirijo para agendar tu consulta." },
+        ]);
+        // Pequeño delay antes de redirigir para que el usuario lea el mensaje
+        setTimeout(() => {
+          window.open("https://cal.com/projectcore", "_blank");
+        }, 1200);
+        return;
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: replyText },
+      ]);
     } catch {
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: "Algo falló. Escríbenos directamente a hola@projectcore.io y te respondemos en menos de 24h." },
+        {
+          role: "assistant",
+          content:
+            "Algo falló. Escríbenos directamente a hola@projectcore.io y te respondemos en menos de 24h.",
+        },
       ]);
     } finally {
       setLoading(false);
@@ -78,7 +133,7 @@ export default function ChatCore() {
     sendMessage(input);
   };
 
-  const visibleMessages = messages.slice(-6);
+  const visibleMessages = messages.slice(-8);
 
   return (
     <section
@@ -116,7 +171,6 @@ export default function ChatCore() {
         >
           {/* Orbe animado */}
           <div className="relative w-16 h-16">
-            {/* Anillo exterior pulsante */}
             <div
               className="absolute inset-0 rounded-full animate-ping"
               style={{
@@ -124,7 +178,6 @@ export default function ChatCore() {
                 animationDuration: "2.5s",
               }}
             />
-            {/* Anillo medio */}
             <div
               className="absolute inset-1 rounded-full animate-pulse"
               style={{
@@ -132,7 +185,6 @@ export default function ChatCore() {
                 animationDuration: "2s",
               }}
             />
-            {/* Core */}
             <div
               className="absolute inset-2 rounded-full flex items-center justify-center"
               style={{
@@ -157,7 +209,7 @@ export default function ChatCore() {
           </div>
         </motion.div>
 
-        {/* Chat container — Double-Bezel */}
+        {/* Chat container */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -179,7 +231,7 @@ export default function ChatCore() {
                 boxShadow: "inset 0 1px 1px rgba(255,255,255,0.04)",
               }}
             >
-              {/* Messages area */}
+              {/* Área de mensajes */}
               <div
                 className="h-72 overflow-y-auto px-6 py-6 flex flex-col gap-4"
                 style={{ scrollbarWidth: "none" }}
@@ -247,7 +299,7 @@ export default function ChatCore() {
               {/* Separador */}
               <div style={{ height: "1px", background: "rgba(255,255,255,0.05)" }} />
 
-              {/* Input area */}
+              {/* Input */}
               <form onSubmit={handleSubmit} className="px-4 py-4 flex items-center gap-3">
                 <div
                   className="flex-1 flex items-center rounded-full px-4 py-2.5 transition-all duration-400"
