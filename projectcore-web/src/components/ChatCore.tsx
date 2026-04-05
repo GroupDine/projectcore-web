@@ -7,12 +7,18 @@ interface Message {
   content: string;
 }
 
-export default function ChatCore() {
+interface ChatCoreProps {
+  externalInput?: string;
+  onExternalInputConsumed?: () => void;
+}
+
+export default function ChatCore({ externalInput, onExternalInputConsumed }: ChatCoreProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Generar session_id único al cargar
   useEffect(() => {
@@ -39,6 +45,14 @@ export default function ChatCore() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Recibir prompt externo desde suggested prompts
+  useEffect(() => {
+    if (!externalInput) return;
+    setInput(externalInput);
+    inputRef.current?.focus();
+    onExternalInputConsumed?.();
+  }, [externalInput, onExternalInputConsumed]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +117,7 @@ export default function ChatCore() {
   return (
     <div className="flex flex-col h-full">
       {/* Mensajes */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 space-y-4" style={{ scrollbarWidth: 'none' }}>
+      <div className="h-72 overflow-y-auto px-6 py-6 flex flex-col gap-4" style={{ scrollbarWidth: 'none' }}>
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -145,6 +159,7 @@ export default function ChatCore() {
         <form onSubmit={handleSubmit} className="flex items-center gap-3">
           <div className="flex-1 flex items-center rounded-full px-4 py-2.5 transition-all duration-400" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
             <input
+              ref={inputRef}
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
