@@ -1,58 +1,74 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-const WEBHOOK_URL =
-  process.env.N8N_WEBHOOK_URL ||
-  "https://n8nprojects-n8n.libhya.easypanel.host/webhook/chatbot-projectcore";
+const WEBHOOK_URL = 'https://n8nprojects-n8n.libhya.easypanel.host/webhook/chatbot-projectcore-v2';
 
 export async function POST(req: NextRequest) {
-  let body: { message?: string; session_id?: string; history?: unknown[] };
-
   try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: "Petición inválida" }, { status: 400 });
-  }
+    const body = await req.json();
+    const { message, history = [], session_id } = body;
 
-  const { message, session_id, history } = body;
-
-  if (!message?.trim()) {
-    return NextResponse.json({ error: "Mensaje vacío" }, { status: 400 });
-  }
-
-  const payload = {
-    session_id: session_id || `session_${Date.now()}`,
-    message: message.trim(),
-    history: history || [],
-  };
-
-  try {
-    const response = await fetch(WEBHOOK_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      signal: AbortSignal.timeout(25000),
-    });
-
-    if (!response.ok) {
-      console.error(`n8n webhook error: ${response.status} ${response.statusText}`);
+    // Validar mensaje
+    if (!message || typeof message !== 'string' || message.trim().length === 0) {
       return NextResponse.json(
-        { error: "El asistente no está disponible en este momento." },
-        { status: 502 }
+        { response: 'Por favor, escribe un mensaje válido.', error: true },
+        { status: 400 }
       );
     }
 
-    const data = await response.json().catch(() => ({}));
+    // Generar session_id si no existe
+    const sessionId = session_id || `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    console.log('[CHATBOT V2] Enviando a webhook:', {
+      sessionId,
+      messageLength: message.length,
+      historyLength: history.length,
+      webhookUrl: WEBHOOK_URL,
+    });
+
+    // Llamar al webhook de n8n v2
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session_id: sessionId,
+        message: message.trim(),
+        history,
+      }),
+    });
+
+    console.log('[CHATBOT V2] Status del webhook:', response.status);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[CHATBOT V2] Error del webhook:', response.status, errorText);
+      throw new Error(`Webhook error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('[CHATBOT V2] Respuesta recibida:', {
+      hasResponse: !!data.response,
+      action: data.action,
+      hasCalendarLink: !!data.calendar_link,
+    });
 
     return NextResponse.json({
-      message: data.response ?? data.message ?? data.text ?? data.content ?? "",
-      action: data.action ?? "message",
-      metadata: data.metadata ?? null,
+      response: data.response || data.message || 'Mensaje recibido correctamente',
+      session_id: sessionId,
+      action: data.action || 'message',
+      calendar_link: data.calendar_link || null,
     });
-  } catch (err) {
-    console.error("Error conectando con n8n:", err);
+
+  } catch (error) {
+    console.error('[CHATBOT V2] Error crítico:', error);
+
     return NextResponse.json(
-      { error: "No se pudo conectar con el asistente. Inténtalo de nuevo." },
-      { status: 503 }
+      {
+        response: 'Disculpa, estoy teniendo problemas técnicos ahora mismo. Por favor, escríbenos a servicios@projectcore.io',
+        error: true,
+      },
+      { status: 500 }
     );
   }
 }
