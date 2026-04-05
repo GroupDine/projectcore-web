@@ -117,10 +117,36 @@ export default function ForWhom() {
   return (
     <section
       id="para-quien"
-      className="py-28 md:py-36 px-6"
+      className="py-28 md:py-36 px-6 relative overflow-hidden"
       style={{ backgroundColor: "#0A0F1C" }}
     >
-      <div className="max-w-6xl mx-auto">
+      {/* Orbes de fondo animados */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div
+          className="absolute rounded-full orb-float"
+          style={{
+            width: "500px",
+            height: "500px",
+            top: "-80px",
+            left: "-120px",
+            background: "radial-gradient(circle, rgba(26,107,90,0.07) 0%, transparent 70%)",
+            filter: "blur(40px)",
+          }}
+        />
+        <div
+          className="absolute rounded-full orb-float-delay"
+          style={{
+            width: "500px",
+            height: "500px",
+            bottom: "-80px",
+            right: "-120px",
+            background: "radial-gradient(circle, rgba(108,99,255,0.06) 0%, transparent 70%)",
+            filter: "blur(40px)",
+          }}
+        />
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Eyebrow */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -182,7 +208,7 @@ export default function ForWhom() {
                     boxShadow: "inset 0 1px 1px rgba(255,255,255,0.03)",
                   }}
                 >
-                  <span className="text-white/35 group-hover:text-[#1A6B5A] transition-colors duration-400 flex-shrink-0">
+                  <span className="text-white/35 group-hover:text-[#1A6B5A] transition-all duration-400 flex-shrink-0 group-hover:scale-110 inline-block">
                     {sector.icon}
                   </span>
                   <div className="flex flex-col gap-1.5">

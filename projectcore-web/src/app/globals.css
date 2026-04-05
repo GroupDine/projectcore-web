@@ -47,10 +47,25 @@ body::before {
 .animate-marquee-left {
   display: flex;
   width: max-content;
-  animation: marquee-left 30s linear infinite;
+  animation: marquee-left 40s linear infinite;
 }
 .animate-marquee-left:hover {
   animation-play-state: paused;
+}
+
+@media (max-width: 768px) {
+  .animate-marquee-left {
+    animation-duration: 25s;
+  }
+}
+
+/* Pulse lento para orbes de fondo */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 1.4; transform: scale(1.08); }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
 }
 
 /* Scrollbar */
