@@ -16,16 +16,29 @@ export default function ScrollHero({ onOpenModal }: ScrollHeroProps) {
     if (!video) return;
 
     const onCanPlay = () => {
-      setLoaded(true);
-      setTimeout(() => setTextVisible(true), 300);
+      if (!loaded) {
+        setLoaded(true);
+        setTimeout(() => setTextVisible(true), 150);
+      }
     };
 
     video.addEventListener("canplay", onCanPlay);
+    // Fallback: Show text anyway after 1.5s if video is slow
+    const fallbackTimer = setTimeout(() => {
+      if (!textVisible) {
+        setLoaded(true);
+        setTextVisible(true);
+      }
+    }, 1500);
+
     // Si ya está listo (caché)
     if (video.readyState >= 3) onCanPlay();
 
-    return () => video.removeEventListener("canplay", onCanPlay);
-  }, []);
+    return () => {
+      video.removeEventListener("canplay", onCanPlay);
+      clearTimeout(fallbackTimer);
+    };
+  }, [loaded, textVisible]);
 
   return (
     <div style={{ height: "100dvh", position: "relative", overflow: "hidden", backgroundColor: "#0A0F1C" }}>
@@ -100,32 +113,25 @@ export default function ScrollHero({ onOpenModal }: ScrollHeroProps) {
           </span>
         </div>
 
-        {/* Headline */}
-        <h1
-          className="font-[var(--font-geist)] text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.08] tracking-tight mb-7 max-w-4xl"
-          style={{
-            opacity: textVisible ? 1 : 0,
-            transform: textVisible ? "translateY(0)" : "translateY(24px)",
-            filter: textVisible ? "blur(0px)" : "blur(8px)",
-            transition:
-              "opacity 0.85s cubic-bezier(0.32,0.72,0,1), transform 0.85s cubic-bezier(0.32,0.72,0,1), filter 0.85s cubic-bezier(0.32,0.72,0,1)",
-            transitionDelay: "100ms",
-          }}
-        >
-          Tu negocio merece un{" "}
-          <span
-            style={{
-              background: "linear-gradient(135deg, #1A6B5A 0%, #22956F 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
-            sistema digital
-          </span>
-          <br className="hidden md:block" />
-          {" "}que trabaje por ti
-        </h1>
+        {/* Headline — 3 palabras en stagger */}
+        <div className="flex flex-col items-center mb-7" style={{ gap: "0.15em" }}>
+          {["AUTOMATIZA.", "CONVIERTE.", "ESCALA."].map((word, i) => (
+            <span
+              key={word}
+              className="font-[var(--font-geist)] text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-none tracking-tight"
+              style={{
+                opacity: textVisible ? 1 : 0,
+                transform: textVisible ? "translateY(0)" : "translateY(20px)",
+                filter: textVisible ? "blur(0px)" : "blur(6px)",
+                transition:
+                  "opacity 0.75s cubic-bezier(0.32,0.72,0,1), transform 0.75s cubic-bezier(0.32,0.72,0,1), filter 0.75s cubic-bezier(0.32,0.72,0,1)",
+                transitionDelay: `${100 + i * 150}ms`,
+              }}
+            >
+              {word}
+            </span>
+          ))}
+        </div>
 
         {/* Subtítulo */}
         <p
@@ -138,9 +144,7 @@ export default function ScrollHero({ onOpenModal }: ScrollHeroProps) {
             transitionDelay: "220ms",
           }}
         >
-          Web, automatizaciones e IA para pymes españolas.
-          <br className="hidden sm:block" />
-          En días, no meses.
+          Web, IA y automatización para pymes españolas.
         </p>
 
         {/* CTAs */}

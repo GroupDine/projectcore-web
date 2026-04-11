@@ -7,6 +7,13 @@ interface Message {
   content: string;
 }
 
+const QUICK_BUTTONS = [
+  'Quiero una web profesional',
+  'Necesito automatizar procesos',
+  'Tengo una pregunta',
+  'Quiero agendar una consulta',
+];
+
 interface ChatCoreProps {
   externalInput?: string;
   onExternalInputConsumed?: () => void;
@@ -17,6 +24,7 @@ export default function ChatCore({ externalInput, onExternalInputConsumed }: Cha
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [sessionId, setSessionId] = useState<string>('');
+  const [calendarLink, setCalendarLink] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -95,10 +103,10 @@ export default function ChatCore({ externalInput, onExternalInputConsumed }: Cha
       // Añadir respuesta del bot
       setMessages([...newMessages, { role: 'assistant', content: data.response }]);
 
-      // Si se agendó reunión
+      // Si se agendó reunión, mostrar botón Cal.com
       if (data.action === 'meeting_scheduled' && data.calendar_link) {
         console.log('[CHATBOT V2] Reunión agendada:', data.calendar_link);
-        // Opcional: mostrar notificación o abrir link
+        setCalendarLink(data.calendar_link);
       }
     } catch (error) {
       console.error('[CHATBOT V2] Error al enviar mensaje:', error);
@@ -113,6 +121,40 @@ export default function ChatCore({ externalInput, onExternalInputConsumed }: Cha
       setIsLoading(false);
     }
   };
+
+  // Envío directo desde botones rápidos
+  const handleQuickButton = async (text: string) => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const userMessage = text;
+    const newMessages: Message[] = [...messages, { role: 'user', content: userMessage }];
+    setMessages(newMessages);
+
+    const historyForAPI = newMessages.slice(1).map((msg) => ({
+      role: msg.role,
+      content: msg.content,
+    }));
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, message: userMessage, history: historyForAPI }),
+      });
+      const data = await response.json();
+      setMessages([...newMessages, { role: 'assistant', content: data.response }]);
+      if (data.action === 'meeting_scheduled' && data.calendar_link) {
+        setCalendarLink(data.calendar_link);
+      }
+    } catch {
+      setMessages([...newMessages, { role: 'assistant', content: 'Lo siento, estoy teniendo problemas técnicos. Por favor, intenta de nuevo.' }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const userHasMessaged = messages.length > 1;
 
   return (
     <div className="flex flex-col h-full">
@@ -150,8 +192,39 @@ export default function ChatCore({ externalInput, onExternalInputConsumed }: Cha
             </div>
           </div>
         )}
+        {/* Botón Cal.com cuando se agenda */}
+        {calendarLink && (
+          <div className="flex justify-start">
+            <a
+              href={calendarLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-semibold text-white transition-all duration-400 hover:scale-[1.02]"
+              style={{ background: '#1A6B5A', border: '1px solid rgba(26,107,90,0.5)' }}
+            >
+              Reservar llamada gratuita →
+            </a>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
+
+      {/* Quick buttons — solo hasta que el usuario manda su primer mensaje */}
+      {!userHasMessaged && (
+        <div className="px-6 pb-3 flex flex-wrap gap-2">
+          {QUICK_BUTTONS.map((btn) => (
+            <button
+              key={btn}
+              type="button"
+              onClick={() => handleQuickButton(btn)}
+              className="rounded-full px-3 py-1.5 text-[12px] text-white/60 hover:text-white transition-all duration-300 cursor-pointer"
+              style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+            >
+              {btn}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Input */}
       <div style={{ height: '1px', background: 'rgba(255,255,255,0.05)' }}></div>

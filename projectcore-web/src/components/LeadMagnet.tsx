@@ -5,17 +5,34 @@ import { motion } from "framer-motion";
 
 export default function LeadMagnet() {
   const [email, setEmail] = useState("");
+  const [nombre, setNombre] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
     setLoading(true);
-    setTimeout(() => {
+    setError("");
+
+    try {
+      const res = await fetch('/api/lead-magnet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), nombre: nombre.trim() }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setError("Algo salió mal. Inténtalo de nuevo.");
+      }
+    } catch {
+      setError("Error de conexión. Inténtalo de nuevo.");
+    } finally {
       setLoading(false);
-      setSubmitted(true);
-    }, 800);
+    }
   };
 
   return (
@@ -62,7 +79,7 @@ export default function LeadMagnet() {
 
               <h2 className="font-[var(--font-geist)] text-2xl md:text-3xl lg:text-4xl font-bold text-white leading-tight tracking-tight mb-4">
                 3 automatizaciones que cualquier
-                <br className="hidden sm:block" /> despacho puede tener en 7 días
+                <br className="hidden sm:block" /> negocio puede tener en 7 días
               </h2>
 
               <p className="text-[15px] text-white/45 mb-10 max-w-md mx-auto leading-relaxed">
@@ -90,48 +107,70 @@ export default function LeadMagnet() {
                   </p>
                 </motion.div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                  {/* Email input — Double-Bezel */}
+                <form onSubmit={handleSubmit} className="flex flex-col gap-3 max-w-md mx-auto">
+                  {/* Nombre */}
                   <div
-                    className="flex-1 p-px rounded-full"
+                    className="p-px rounded-full"
                     style={{
                       background: "rgba(255,255,255,0.06)",
                       border: "1px solid rgba(255,255,255,0.08)",
                     }}
                   >
                     <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="tu@email.com"
-                      required
+                      type="text"
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}
+                      placeholder="Tu nombre"
                       className="w-full rounded-full px-5 py-3 text-[14px] text-white placeholder-white/25 bg-transparent outline-none"
-                      style={{
-                        background: "rgba(255,255,255,0.02)",
-                      }}
+                      style={{ background: "rgba(255,255,255,0.02)" }}
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="group flex items-center justify-center gap-2 rounded-full bg-[#1A6B5A] px-6 py-3 text-[14px] font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#22856F] hover:scale-[1.03] active:scale-[0.97] disabled:opacity-60 cursor-pointer whitespace-nowrap"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z" />
-                        </svg>
-                        Enviando...
-                      </span>
-                    ) : (
-                      <>
-                        <span>Descárgala ahora — es gratis</span>
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 text-[11px] transition-transform duration-400 group-hover:translate-x-0.5">→</span>
-                      </>
-                    )}
-                  </button>
+                  {/* Email + botón */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <div
+                      className="flex-1 p-px rounded-full"
+                      style={{
+                        background: "rgba(255,255,255,0.06)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="tu@email.com"
+                        required
+                        className="w-full rounded-full px-5 py-3 text-[14px] text-white placeholder-white/25 bg-transparent outline-none"
+                        style={{ background: "rgba(255,255,255,0.02)" }}
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="group flex items-center justify-center gap-2 rounded-full bg-[#1A6B5A] px-6 py-3 text-[14px] font-semibold text-white transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-[#22856F] hover:scale-[1.03] active:scale-[0.97] disabled:opacity-60 cursor-pointer whitespace-nowrap"
+                    >
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.4 0 0 5.4 0 12h4z" />
+                          </svg>
+                          Enviando...
+                        </span>
+                      ) : (
+                        <>
+                          <span>Descárgala — es gratis</span>
+                          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 text-[11px] transition-transform duration-400 group-hover:translate-x-0.5">→</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {error && (
+                    <p className="text-[13px] text-red-400 text-center">{error}</p>
+                  )}
                 </form>
               )}
 
